@@ -1,3 +1,4 @@
+require('@google-cloud/debug-agent').start();
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const fetch = require('node-fetch');
@@ -10,7 +11,7 @@ exports.reserveTicket = functions.https.onRequest((req, res) => {
   const query = req.query;
   // Push it into the Realtime Database then send a response
   cors(req, res, () => {
-    admin.database().ref(`/tickets/event1/tickets/${query.ticketid}`).update({available: false, reserved: true }).then(() => {
+    admin.database().ref(`/tickets/${query.eventid}/tickets/${query.ticketid}`).update({available: false, reserved: true }).then(() => {
       res.status(201).json({message: 'Ticket reserved', ticketId: query.ticketid, error: false });
     });
   })
@@ -27,7 +28,7 @@ exports.purchaseTicket = functions.https.onRequest((req, res) => {
 
   const confirmedPurchase = () => {
     cors(req, res, () => {
-      admin.database().ref(`/tickets/event1/tickets/${query.ticketid}`).update({available: false, purchased: true }).then(() => {
+      admin.database().ref(`/tickets/${query.eventid}/tickets/${query.ticketid}`).update({available: false, purchased: true }).then(() => {
         res.status(201).json({message: 'Ticket purchased', ticketId: query.ticketid, error: false });
       })
     })
@@ -52,8 +53,8 @@ exports.resetTicket = functions.https.onRequest((req, res) => {
   const query = req.query;
   // Push it into the Realtime Database then send a response
   cors(req, res, () => {
-    admin.database().ref(`/tickets/event1/tickets/${query.ticketid}`).update({available: true, reserved: false, purchased: false }).then(() => {
+    admin.database().ref(`/tickets/${query.eventid}/tickets/${query.ticketid}`).update({available: true, reserved: false, purchased: false }).then(() => {
       res.status(201).json({message: 'Ticket reset', ticketId: query.ticketid, error: false });
     })
   })
-}
+})
