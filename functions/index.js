@@ -33,8 +33,7 @@ exports.purchaseTicket = functions.https.onRequest((req, res) => {
     })
   }
 
-  setTimeout(confirmedPurchase, 200)
-
+  confirmedPurchase()
 })
 
 // exports.validatePayment = functions.https.onRequest((req, res) => {
